@@ -1,0 +1,376 @@
+:root {
+  --bg: #080808;
+  --text-bright: #ffffff;
+  --text-heading: #b0b0b0;
+  --text-dim: #5c5c5c;
+  --line: rgba(255, 255, 255, 0.06);
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  min-height: 100vh;
+  background-color: var(--bg);
+  color: var(--text-bright);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 56px 24px 36px;
+  position: relative;
+}
+
+/* LANGUAGE SELECTOR */
+.lang-bar {
+  position: fixed;
+  top: 24px;
+  right: 28px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lang-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-family: var(--font);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  padding: 4px 5px;
+  transition: color 0.25s ease, filter 0.25s ease, transform 0.25s ease;
+}
+
+.lang-btn:hover,
+.lang-btn:focus-visible {
+  color: var(--text-bright);
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.45));
+  outline: none;
+}
+
+.lang-btn.active {
+  color: var(--text-bright);
+}
+
+.lang-sep {
+  font-size: 0.65rem;
+  color: #2b2b2b;
+  user-select: none;
+}
+
+/* PAGE CONTAINER */
+.page {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* PERFIL / HERO */
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 52px;
+}
+
+.avatar-wrap {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  padding: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  margin-bottom: 18px;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s ease,
+              box-shadow 0.35s ease;
+}
+
+.avatar-wrap:hover {
+  transform: scale(1.05);
+  border-color: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 0 28px rgba(255, 255, 255, 0.18);
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.brand-title {
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  padding-left: 0.24em;
+  color: var(--text-bright);
+  margin-bottom: 6px;
+}
+
+.brand-subtitle {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  padding-left: 0.28em;
+  color: var(--text-dim);
+}
+
+/* SEÇÕES E DIVISORES */
+.section {
+  width: 100%;
+  padding: 4px 0;
+}
+
+.section-heading {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  padding-left: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-heading);
+  margin-bottom: 30px;
+}
+
+.divider {
+  width: 100%;
+  max-width: 440px;
+  height: 1px;
+  background: var(--line);
+  margin: 40px 0;
+}
+
+/* REDES SOCIAIS (Destaque ao passar o mouse) */
+.socials-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 34px;
+}
+
+.social-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+  color: var(--text-dim);
+  transition: color 0.3s ease,
+              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.3s ease,
+              opacity 0.3s ease;
+}
+
+.social-item svg {
+  width: 25px;
+  height: 25px;
+  transition: transform 0.3s ease;
+}
+
+.social-item span {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+
+.socials-row:hover .social-item {
+  opacity: 0.38;
+}
+
+.socials-row .social-item:hover,
+.socials-row .social-item:focus-visible {
+  opacity: 1;
+  color: var(--text-bright);
+  transform: translateY(-2px) scale(1.06);
+  filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.45));
+  outline: none;
+}
+
+/* EMPRESAS QUE JÁ COLABOREI (Proporcional às redes sociais) */
+.brands-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 48px;
+}
+
+.brand-item {
+  cursor: pointer;
+  color: var(--text-dim);
+  opacity: 0.55;
+  transition: color 0.32s ease,
+              opacity 0.32s ease,
+              transform 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.32s ease;
+  user-select: none;
+}
+
+.brands-row:hover .brand-item {
+  opacity: 0.35;
+}
+
+.brands-row .brand-item:hover,
+.brands-row .brand-item:focus-visible {
+  color: var(--text-bright);
+  opacity: 1;
+  transform: translateY(-2px) scale(1.05);
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.42));
+  outline: none;
+}
+
+/* Logo Orange (Tamanho refinado e proporcional) */
+.orange-logo {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 9px;
+}
+
+.orange-square {
+  width: 24px;
+  height: 24px;
+  background-color: currentColor;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.orange-word {
+  font-size: 1.02rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 0.85;
+  padding-bottom: 1px;
+}
+
+/* Logo Mureka AI (Tamanho refinado e proporcional) */
+.mureka-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mureka-wave {
+  width: 22px;
+  height: 20px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.mureka-word {
+  font-size: 0.94rem;
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+
+.mureka-word strong {
+  font-weight: 800;
+}
+
+.mureka-word em {
+  font-style: normal;
+  font-weight: 300;
+}
+
+/* CONTATO PARA PROMO (Proporcional e delicado) */
+.promo-contact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.email-trigger {
+  background: transparent;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--text-dim);
+  font-family: var(--font);
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  padding: 6px 12px;
+  transition: color 0.3s ease,
+              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.3s ease;
+}
+
+.email-trigger:hover,
+.email-trigger:focus-visible {
+  color: var(--text-bright);
+  transform: translateY(-1px) scale(1.03);
+  filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.42));
+  outline: none;
+}
+
+.contact-subactions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  color: #424242;
+}
+
+.copy-hint.copied {
+  color: var(--text-bright);
+}
+
+.mailto-direct {
+  color: #4f4f4f;
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.mailto-direct:hover {
+  color: var(--text-bright);
+}
+
+/* FOOTER */
+.footer {
+  margin-top: 56px;
+  font-size: 0.64rem;
+  letter-spacing: 0.22em;
+  color: #303030;
+}
+
+@media (max-width: 560px) {
+  body {
+    padding: 58px 18px 28px;
+  }
+
+  .lang-bar {
+    position: static;
+    margin-bottom: 28px;
+  }
+
+  .socials-row {
+    gap: 24px;
+  }
+
+  .brands-row {
+    gap: 36px;
+  }
+}
