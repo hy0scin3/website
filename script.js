@@ -205,16 +205,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Supabase-style expanding software accordion (hover, focus, or click)
+  // Supabase-style expanding software accordion (click only)
   const panels = document.querySelectorAll('.sw-panel');
   panels.forEach((panel) => {
     const activate = () => {
       panels.forEach((p) => p.classList.remove('active'));
       panel.classList.add('active');
     };
-    panel.addEventListener('mouseenter', activate);
-    panel.addEventListener('focus', activate);
     panel.addEventListener('click', activate);
+    panel.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        activate();
+      }
+    });
   });
 
   // Copy email
