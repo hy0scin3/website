@@ -219,6 +219,68 @@ body {
   outline: none;
 }
 
+/* SOFTWARES QUE USO (Destaque ao passar o mouse) */
+.software-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 32px;
+}
+
+.software-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  color: var(--text-dim);
+  cursor: default;
+  user-select: none;
+  transition: color 0.3s ease,
+              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.3s ease,
+              opacity 0.3s ease;
+}
+
+.software-item svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+.adobe-badge {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  border: 1.7px solid currentColor;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.software-item span {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.software-row:hover .software-item {
+  opacity: 0.35;
+}
+
+.software-row .software-item:hover,
+.software-row .software-item:focus-visible {
+  opacity: 1;
+  color: var(--text-bright);
+  transform: translateY(-2px) scale(1.06);
+  filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.45));
+  outline: none;
+}
+
 /* REDES SOCIAIS (Destaque ao passar o mouse) */
 .socials-row {
   display: flex;
