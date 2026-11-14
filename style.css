@@ -2,7 +2,7 @@
   --bg: #080808;
   --text-bright: #ffffff;
   --text-heading: #b0b0b0;
-  --text-dim: #5c5c5c;
+  --text-dim: #787878;
   --line: rgba(255, 255, 255, 0.06);
   --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
@@ -188,7 +188,8 @@ body {
 .stat-icon {
   width: 14px;
   height: 14px;
-  opacity: 0.85;
+  opacity: 0.9;
+  transition: color 0.3s ease;
 }
 
 .stat-number {
@@ -206,17 +207,31 @@ body {
   opacity: 0.85;
 }
 
-.stats-row:hover .stat-item {
-  opacity: 0.35;
-}
-
-.stats-row .stat-item:hover,
-.stats-row .stat-item:focus-visible {
-  opacity: 1;
+.stat-item:hover,
+.stat-item:focus-visible {
   color: var(--text-bright);
   transform: translateY(-2px) scale(1.05);
-  filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.45));
   outline: none;
+}
+
+.stat-tt:hover,
+.stat-tt:focus-visible {
+  filter: drop-shadow(0 0 14px rgba(0, 242, 254, 0.45));
+}
+
+.stat-tt:hover .stat-icon,
+.stat-tt:focus-visible .stat-icon {
+  color: #00f2fe;
+}
+
+.stat-yt:hover,
+.stat-yt:focus-visible {
+  filter: drop-shadow(0 0 14px rgba(255, 0, 51, 0.45));
+}
+
+.stat-yt:hover .stat-icon,
+.stat-yt:focus-visible .stat-icon {
+  color: #ff0033;
 }
 
 /* SOFTWARES QUE USO (Acordeão expansível estilo Supabase) */
@@ -233,16 +248,19 @@ body {
   position: relative;
   flex: 0.65;
   min-width: 44px;
+  height: 100%;
   border-radius: 12px;
-  padding: 16px 12px;
+  padding: 16px 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   text-align: left;
   overflow: hidden;
   cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid transparent;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   transition: flex 0.45s cubic-bezier(0.16, 1, 0.3, 1),
               padding 0.35s ease,
               border-color 0.35s ease,
@@ -254,13 +272,12 @@ body {
   flex: 4.4;
   padding: 18px 22px;
   align-items: flex-start;
-  border-color: rgba(255, 255, 255, 0.45);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
 }
 
 /* Cores oficiais de cada software */
 .sw-ae {
-  background: linear-gradient(165deg, #2d186c 0%, #100826 100%);
+  background-image: linear-gradient(180deg, #2d186c 0%, #100826 100%);
   color: #d8b4fe;
 }
 .sw-ae.active {
@@ -269,7 +286,7 @@ body {
 }
 
 .sw-pr {
-  background: linear-gradient(165deg, #4a1564 0%, #190626 100%);
+  background-image: linear-gradient(180deg, #4a1564 0%, #190626 100%);
   color: #f0abfc;
 }
 .sw-pr.active {
@@ -278,7 +295,7 @@ body {
 }
 
 .sw-davinci {
-  background: linear-gradient(165deg, #0d3550 0%, #061523 100%);
+  background-image: linear-gradient(180deg, #0d3550 0%, #061523 100%);
   color: #7dd3fc;
 }
 .sw-davinci.active {
@@ -287,7 +304,7 @@ body {
 }
 
 .sw-blender {
-  background: linear-gradient(165deg, #ea580c 0%, #7c2d12 100%);
+  background-image: linear-gradient(180deg, #ea580c 0%, #7c2d12 100%);
   color: #ffedd5;
 }
 .sw-blender.active {
@@ -296,8 +313,8 @@ body {
 }
 
 .sw-capcut {
-  background: linear-gradient(165deg, #1b1b1b 0%, #090909 100%);
-  color: #d4d4d4;
+  background-image: linear-gradient(180deg, #1f1f1f 0%, #0b0b0b 100%);
+  color: #e5e5e5;
 }
 .sw-capcut.active {
   color: #ffffff;
@@ -305,7 +322,7 @@ body {
 }
 
 .sw-krita {
-  background: linear-gradient(165deg, #a21caf 0%, #1e3a8a 100%);
+  background-image: linear-gradient(180deg, #a21caf 0%, #1e3a8a 100%);
   color: #f5d0fe;
 }
 .sw-krita.active {
@@ -341,12 +358,14 @@ body {
 }
 
 .sw-body {
-  width: 100%;
-  min-width: 210px;
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 18px;
   opacity: 0;
   transform: translateY(8px);
   pointer-events: none;
-  transition: opacity 0.25s ease, transform 0.3s ease;
+  transition: opacity 0.22s ease, transform 0.28s ease;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -356,7 +375,7 @@ body {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
-  transition-delay: 0.08s;
+  transition-delay: 0.1s;
 }
 
 .sw-title {
@@ -370,17 +389,17 @@ body {
 .sw-role {
   font-size: 0.68rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.68);
 }
 
 .sw-desc {
   font-size: 0.78rem;
   font-weight: 500;
   line-height: 1.45;
-  color: rgba(255, 255, 255, 0.92);
+  color: rgba(255, 255, 255, 0.94);
 }
 
-/* REDES SOCIAIS (Apenas logos no fim, estilo Supabase) */
+/* REDES SOCIAIS (Apenas logos no fim, com as cores oficiais no hover) */
 .socials-row {
   display: flex;
   align-items: center;
@@ -407,16 +426,52 @@ body {
   display: block;
 }
 
-.socials-row:hover .social-item {
-  opacity: 0.38;
+/* Cores oficiais de cada rede social no hover */
+.social-yt:hover,
+.social-yt:focus-visible {
+  color: #ff0033;
+  transform: translateY(-2px) scale(1.12);
+  filter: drop-shadow(0 0 12px rgba(255, 0, 51, 0.6));
+  outline: none;
 }
 
-.socials-row .social-item:hover,
-.socials-row .social-item:focus-visible {
-  opacity: 1;
-  color: var(--text-bright);
-  transform: translateY(-2px) scale(1.08);
-  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.45));
+.social-tt:hover,
+.social-tt:focus-visible {
+  color: #00f2fe;
+  transform: translateY(-2px) scale(1.12);
+  filter: drop-shadow(2px 1px 0px #fe2c55) drop-shadow(0 0 12px rgba(0, 242, 254, 0.55));
+  outline: none;
+}
+
+.social-ig:hover,
+.social-ig:focus-visible {
+  color: #e1306c;
+  transform: translateY(-2px) scale(1.12);
+  filter: drop-shadow(0 0 12px rgba(225, 48, 108, 0.65));
+  outline: none;
+}
+
+.social-payhip:hover,
+.social-payhip:focus-visible {
+  color: #38bdf8;
+  transform: translateY(-2px) scale(1.12);
+  filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.6));
+  outline: none;
+}
+
+.social-x:hover,
+.social-x:focus-visible {
+  color: #ffffff;
+  transform: translateY(-2px) scale(1.12);
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.6));
+  outline: none;
+}
+
+.social-fb:hover,
+.social-fb:focus-visible {
+  color: #1877f2;
+  transform: translateY(-2px) scale(1.12);
+  filter: drop-shadow(0 0 12px rgba(24, 119, 242, 0.65));
   outline: none;
 }
 
@@ -433,7 +488,6 @@ body {
   cursor: pointer;
   text-decoration: none;
   color: var(--text-dim);
-  opacity: 0.55;
   transition: color 0.32s ease,
               opacity 0.32s ease,
               transform 0.32s cubic-bezier(0.16, 1, 0.3, 1),
@@ -441,37 +495,31 @@ body {
   user-select: none;
 }
 
-.brands-row:hover .brand-item {
-  opacity: 0.35;
-}
-
 /* Hover Orange: Laranja oficial da marca (#FF7900) */
-.brands-row .brand-orange:hover,
-.brands-row .brand-orange:focus-visible {
+.brand-orange:hover,
+.brand-orange:focus-visible {
   color: #ff7900;
-  opacity: 1;
   transform: translateY(-2px) scale(1.05);
   filter: drop-shadow(0 0 16px rgba(255, 121, 0, 0.55));
   outline: none;
 }
 
 /* Hover Mureka AI: Cores da marca (Roxo/Magenta + Ciano) */
-.brands-row .brand-mureka:hover,
-.brands-row .brand-mureka:focus-visible {
+.brand-mureka:hover,
+.brand-mureka:focus-visible {
   color: #c084fc;
-  opacity: 1;
   transform: translateY(-2px) scale(1.05);
   filter: drop-shadow(0 0 16px rgba(192, 132, 252, 0.55));
   outline: none;
 }
 
-.brands-row .brand-mureka:hover .mureka-wave,
-.brands-row .brand-mureka:focus-visible .mureka-wave {
+.brand-mureka:hover .mureka-wave,
+.brand-mureka:focus-visible .mureka-wave {
   color: #a855f7;
 }
 
-.brands-row .brand-mureka:hover .mureka-word,
-.brands-row .brand-mureka:focus-visible .mureka-word {
+.brand-mureka:hover .mureka-word,
+.brand-mureka:focus-visible .mureka-word {
   background: linear-gradient(90deg, #c084fc 0%, #f472b6 55%, #38bdf8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -571,7 +619,7 @@ body {
   gap: 8px;
   font-size: 0.68rem;
   letter-spacing: 0.03em;
-  color: #424242;
+  color: #4f4f4f;
 }
 
 .copy-hint.copied {
@@ -579,7 +627,7 @@ body {
 }
 
 .mailto-direct {
-  color: #4f4f4f;
+  color: #5c5c5c;
   text-decoration: none;
   transition: color 0.25s ease;
 }
@@ -600,12 +648,12 @@ body {
 .copyright {
   font-size: 0.64rem;
   letter-spacing: 0.22em;
-  color: #303030;
+  color: #363636;
 }
 
 @media (max-width: 560px) {
   body {
-    padding: 48px 18px 28px;
+    padding: 48px 16px 28px;
   }
 
   .lang-bar {
@@ -617,8 +665,27 @@ body {
     gap: 24px 32px;
   }
 
+  .software-accordion {
+    height: 215px;
+    gap: 6px;
+  }
+
+  .sw-panel {
+    min-width: 34px;
+  }
+
+  .sw-panel.active {
+    padding: 16px;
+  }
+
+  .sw-body {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+  }
+
   .socials-row {
-    gap: 24px;
+    gap: 22px;
   }
 
   .brands-row {
