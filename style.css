@@ -281,38 +281,31 @@ body {
   outline: none;
 }
 
-/* REDES SOCIAIS (Destaque ao passar o mouse) */
+/* REDES SOCIAIS (Apenas logos no fim, estilo Supabase) */
 .socials-row {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 34px;
+  gap: 22px;
 }
 
 .social-item {
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
   align-items: center;
-  gap: 9px;
+  justify-content: center;
   text-decoration: none;
   color: var(--text-dim);
-  transition: color 0.3s ease,
-              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 0.3s ease,
-              opacity 0.3s ease;
+  transition: color 0.25s ease,
+              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.25s ease,
+              opacity 0.25s ease;
 }
 
 .social-item svg {
-  width: 25px;
-  height: 25px;
-  transition: transform 0.3s ease;
-}
-
-.social-item span {
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
+  width: 20px;
+  height: 20px;
+  display: block;
 }
 
 .socials-row:hover .social-item {
@@ -323,8 +316,8 @@ body {
 .socials-row .social-item:focus-visible {
   opacity: 1;
   color: var(--text-bright);
-  transform: translateY(-2px) scale(1.06);
-  filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.45));
+  transform: translateY(-2px) scale(1.08);
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.45));
   outline: none;
 }
 
@@ -475,7 +468,14 @@ body {
 
 /* FOOTER */
 .footer {
-  margin-top: 52px;
+  margin-top: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.copyright {
   font-size: 0.64rem;
   letter-spacing: 0.22em;
   color: #303030;
