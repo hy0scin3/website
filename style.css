@@ -27,7 +27,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 56px 24px 36px;
+  padding: 52px 24px 36px;
   position: relative;
 }
 
@@ -75,7 +75,7 @@ body {
 /* PAGE CONTAINER */
 .page {
   width: 100%;
-  max-width: 640px;
+  max-width: 660px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -87,7 +87,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 52px;
+  margin-bottom: 42px;
 }
 
 .avatar-wrap {
@@ -146,7 +146,7 @@ body {
   padding-left: 0.22em;
   text-transform: uppercase;
   color: var(--text-heading);
-  margin-bottom: 30px;
+  margin-bottom: 28px;
 }
 
 .divider {
@@ -154,7 +154,69 @@ body {
   max-width: 440px;
   height: 1px;
   background: var(--line);
-  margin: 40px 0;
+  margin: 36px 0;
+}
+
+/* CONTADOR DE MÉTRICAS (EM CIMA) */
+.stats-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 38px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: var(--text-dim);
+  transition: color 0.3s ease,
+              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.3s ease,
+              opacity 0.3s ease;
+}
+
+.stat-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.stat-icon {
+  width: 14px;
+  height: 14px;
+  opacity: 0.85;
+}
+
+.stat-number {
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-label {
+  font-size: 0.64rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.stats-row:hover .stat-item {
+  opacity: 0.35;
+}
+
+.stats-row .stat-item:hover,
+.stats-row .stat-item:focus-visible {
+  opacity: 1;
+  color: var(--text-bright);
+  transform: translateY(-2px) scale(1.05);
+  filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.45));
+  outline: none;
 }
 
 /* REDES SOCIAIS (Destaque ao passar o mouse) */
@@ -238,7 +300,7 @@ body {
   outline: none;
 }
 
-/* Logo Orange (Tamanho refinado e proporcional) */
+/* Logo Orange */
 .orange-logo {
   display: inline-flex;
   align-items: flex-end;
@@ -261,7 +323,7 @@ body {
   padding-bottom: 1px;
 }
 
-/* Logo Mureka AI (Tamanho refinado e proporcional) */
+/* Logo Mureka AI */
 .mureka-logo {
   display: inline-flex;
   align-items: center;
@@ -290,7 +352,7 @@ body {
   font-weight: 300;
 }
 
-/* CONTATO PARA PROMO (Proporcional e delicado) */
+/* CONTATO PARA PROMO */
 .promo-contact {
   display: flex;
   flex-direction: column;
@@ -351,7 +413,7 @@ body {
 
 /* FOOTER */
 .footer {
-  margin-top: 56px;
+  margin-top: 52px;
   font-size: 0.64rem;
   letter-spacing: 0.22em;
   color: #303030;
@@ -359,12 +421,16 @@ body {
 
 @media (max-width: 560px) {
   body {
-    padding: 58px 18px 28px;
+    padding: 48px 18px 28px;
   }
 
   .lang-bar {
     position: static;
-    margin-bottom: 28px;
+    margin-bottom: 24px;
+  }
+
+  .stats-row {
+    gap: 24px 32px;
   }
 
   .socials-row {

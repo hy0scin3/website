@@ -1,6 +1,10 @@
 const i18n = {
   en: {
     subtitle: 'FOOTBALL EDITS',
+    ttFollowers: 'TikTok Followers',
+    ttLikes: 'TikTok Likes',
+    ytSubs: 'YouTube Subscribers',
+    ytViews: 'YouTube Views',
     socialsHeading: 'SOCIALS & STORE',
     brandsHeading: "BRANDS I'VE WORKED WITH",
     contactHeading: 'PROMO & INQUIRIES',
@@ -10,6 +14,10 @@ const i18n = {
   },
   pt: {
     subtitle: 'EDITS DE FUTEBOL',
+    ttFollowers: 'Seguidores TikTok',
+    ttLikes: 'Curtidas TikTok',
+    ytSubs: 'Inscritos YouTube',
+    ytViews: 'Views no YouTube',
     socialsHeading: 'REDES SOCIAIS & LOJA',
     brandsHeading: 'EMPRESAS QUE JÁ COLABOREI',
     contactHeading: 'CONTATO PARA PROMO',
@@ -19,6 +27,10 @@ const i18n = {
   },
   es: {
     subtitle: 'EDITS DE FÚTBOL',
+    ttFollowers: 'Seguidores TikTok',
+    ttLikes: 'Me gusta TikTok',
+    ytSubs: 'Suscriptores YouTube',
+    ytViews: 'Vistas en YouTube',
     socialsHeading: 'REDES SOCIALES Y TIENDA',
     brandsHeading: 'MARCAS CON LAS QUE COLABORÉ',
     contactHeading: 'CONTACTO PARA PROMO',
@@ -28,6 +40,10 @@ const i18n = {
   },
   fr: {
     subtitle: 'EDITS DE FOOTBALL',
+    ttFollowers: 'Abonnés TikTok',
+    ttLikes: "J'aime TikTok",
+    ytSubs: 'Abonnés YouTube',
+    ytViews: 'Vues YouTube',
     socialsHeading: 'RÉSEAUX SOCIAUX & BOUTIQUE',
     brandsHeading: 'MARQUES PARTENAIRES',
     contactHeading: 'CONTACT PROMO',
@@ -38,6 +54,70 @@ const i18n = {
 };
 
 let currentLang = 'en';
+
+function formatCompact(num) {
+  if (num >= 1_000_000_000) {
+    return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'B+';
+  }
+  if (num >= 1_000_000) {
+    return (num / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M+';
+  }
+  if (num >= 1_000) {
+    return Math.round(num / 1_000) + 'K+';
+  }
+  return String(num);
+}
+
+function animateCounter(el, targetValue, duration = 1100) {
+  if (!el || !targetValue) return;
+  const startTime = performance.now();
+
+  function tick(now) {
+    const progress = Math.min((now - startTime) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.round(targetValue * eased);
+    el.textContent = formatCompact(current);
+    if (progress < 1) {
+      requestAnimationFrame(tick);
+    } else {
+      el.textContent = formatCompact(targetValue);
+    }
+  }
+
+  requestAnimationFrame(tick);
+}
+
+async function loadAndRenderStats() {
+  const map = {
+    tiktokFollowers: document.getElementById('stat-tt-followers'),
+    tiktokLikes: document.getElementById('stat-tt-likes'),
+    youtubeSubscribers: document.getElementById('stat-yt-subs'),
+    youtubeViews: document.getElementById('stat-yt-views')
+  };
+
+  let data = {
+    tiktokFollowers: 330000,
+    tiktokLikes: 1400000,
+    youtubeSubscribers: 463000,
+    youtubeViews: 164264010
+  };
+
+  try {
+    const res = await fetch('stats.json', { cache: 'no-store' });
+    if (res.ok) {
+      const json = await res.json();
+      data = { ...data, ...json };
+    }
+  } catch {
+    // Fallback to embedded values when opened via file://
+  }
+
+  Object.entries(map).forEach(([key, el]) => {
+    if (el && data[key]) {
+      animateCounter(el, Number(data[key]));
+    }
+  });
+}
 
 function applyLanguage(lang) {
   if (!i18n[lang]) return;
@@ -62,10 +142,9 @@ document.addEventListener('DOMContentLoaded', () => {
     yearEl.textContent = new Date().getFullYear();
   }
 
-  // Default to English
   applyLanguage('en');
+  loadAndRenderStats();
 
-  // Language switcher buttons
   document.querySelectorAll('.lang-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       const lang = btn.getAttribute('data-lang');
@@ -73,7 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Copy email functionality
   const copyBtn = document.getElementById('copy-email');
   const feedback = document.getElementById('copy-feedback');
   const email = 'hyoscine7@gmail.com';
