@@ -636,6 +636,110 @@ body {
   color: var(--text-bright);
 }
 
+/* MINI PITCH ARENA (Minigame de Futebol Interativo) */
+.arena-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.arena-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding: 0 4px;
+}
+
+.arena-title {
+  margin-bottom: 0;
+}
+
+.arena-scoreboard {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--text-dim);
+}
+
+.score-pill strong {
+  color: var(--text-bright);
+  font-weight: 700;
+  margin-left: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.score-sep {
+  color: #2e2e2e;
+}
+
+.arena-shell {
+  --mx: 50%;
+  --my: 50%;
+  --glow-color: rgba(56, 189, 248, 0.75);
+  position: relative;
+  width: 100%;
+  border-radius: 16px;
+  padding: 1.5px;
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+  cursor: none;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.65);
+  transition: box-shadow 0.35s ease, transform 0.35s ease;
+  touch-action: none;
+}
+
+/* Efeito luminoso dinâmico nas bordas que acompanha o mouse e a bola */
+.arena-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: radial-gradient(
+    220px circle at var(--mx) var(--my),
+    var(--glow-color),
+    rgba(255, 255, 255, 0.18) 40%,
+    transparent 75%
+  );
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.arena-shell:hover::before,
+.arena-shell.active-arena::before {
+  opacity: 1;
+}
+
+.arena-shell.goal-flash {
+  --glow-color: rgba(0, 242, 254, 1);
+  box-shadow: 0 0 36px rgba(0, 242, 254, 0.45), 0 18px 42px rgba(0, 0, 0, 0.65);
+}
+
+#pitch-canvas {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 640 / 250;
+  background: radial-gradient(circle at 50% 50%, #0e131d 0%, #090b10 100%);
+  border-radius: 14.5px;
+}
+
+.arena-hint {
+  margin-top: 12px;
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  color: #484848;
+  user-select: none;
+}
+
 /* FOOTER */
 .footer {
   margin-top: 56px;
