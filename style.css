@@ -863,4 +863,25 @@ body {
   .brands-row {
     gap: 32px;
   }
+
+  /* No celular, exibe as marcas colaboradoras já com as cores oficiais */
+  .brand-orange {
+    color: #ff7900;
+    filter: drop-shadow(0 0 12px rgba(255, 121, 0, 0.35));
+  }
+
+  .brand-mureka {
+    color: #c084fc;
+    filter: drop-shadow(0 0 12px rgba(192, 132, 252, 0.35));
+  }
+
+  .brand-mureka .mureka-wave {
+    color: #a855f7;
+  }
+
+  .brand-mureka .mureka-word {
+    background: linear-gradient(90deg, #c084fc 0%, #f472b6 55%, #38bdf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 }
