@@ -6,6 +6,18 @@ const i18n = {
     ytSubs: 'Subscribers',
     ytViews: 'Views',
     softwareHeading: 'SOFTWARE & TOOLS',
+    aeRole: 'VFX, Motion & Compositing',
+    aeDesc: 'High-impact visual effects, smooth velocity sync, shakes, 3D camera tracking, and custom glow compositing.',
+    prRole: 'Timeline & Sound Design',
+    prDesc: 'Precision match-cut assembly, frame-accurate beat syncing, SFX layering, and final mastering.',
+    drRole: 'Color Grading & Finishing',
+    drDesc: 'Cinematic color grading, custom LUTs, HDR contrast, and studio-grade visual polish.',
+    blRole: '3D Elements & Environments',
+    blDesc: '3D scenes, stadium lighting, custom 3D typography, and dynamic camera animations.',
+    ccRole: 'Short-Form & Viral Pacing',
+    ccDesc: 'Fast-turnaround vertical edits, dynamic captions, and trend-ready delivery for TikTok & Reels.',
+    krRole: 'Digital Art & Frame Paint',
+    krDesc: 'Custom hand-drawn frame-by-frame effects, thumbnails, masking, and stylized artwork.',
     socialsHeading: 'SOCIALS & STORE',
     brandsHeading: "BRANDS I'VE WORKED WITH",
     contactHeading: 'PROMO & INQUIRIES',
@@ -20,6 +32,18 @@ const i18n = {
     ytSubs: 'Inscritos',
     ytViews: 'Views',
     softwareHeading: 'SOFTWARES QUE USO',
+    aeRole: 'VFX, Motion & Composição',
+    aeDesc: 'Efeitos visuais de alto impacto, sincronia de velocity, shakes, câmera 3D e composição de glows.',
+    prRole: 'Timeline & Sound Design',
+    prDesc: 'Cortes precisos na batida, montagem de lances, camadas de efeitos sonoros (SFX) e finalização.',
+    drRole: 'Color Grading & Finalização',
+    drDesc: 'Correção de cor cinematográfica, LUTs próprios, contraste HDR e acabamento visual de estúdio.',
+    blRole: 'Elementos & Cenários 3D',
+    blDesc: 'Modelagem de cenas 3D, iluminação, textos tridimensionais e animações dinâmicas de câmera.',
+    ccRole: 'Formato Curto & Ritmo Viral',
+    ccDesc: 'Edições verticais ágeis, efeitos dinâmicos e entrega otimizada para TikTok, Reels e Shorts.',
+    krRole: 'Arte Digital & Frame a Frame',
+    krDesc: 'Efeitos desenhados quadro a quadro, recortes avançados, thumbnails e estilização visual.',
     socialsHeading: 'REDES SOCIAIS & LOJA',
     brandsHeading: 'EMPRESAS QUE JÁ COLABOREI',
     contactHeading: 'CONTATO PARA PROMO',
@@ -34,6 +58,18 @@ const i18n = {
     ytSubs: 'Suscriptores',
     ytViews: 'Vistas',
     softwareHeading: 'SOFTWARE QUE USO',
+    aeRole: 'VFX, Motion y Composición',
+    aeDesc: 'Efectos visuales de alto impacto, sincronización de velocity, shakes, cámara 3D y composición.',
+    prRole: 'Timeline y Diseño Sonoro',
+    prDesc: 'Cortes precisos al ritmo, montaje de jugadas, capas de efectos de sonido (SFX) y masterización.',
+    drRole: 'Color Grading y Acabado',
+    drDesc: 'Etalonaje cinematográfico, LUTs personalizados, contraste HDR y acabado visual de estudio.',
+    blRole: 'Elementos y Entornos 3D',
+    blDesc: 'Escenas 3D, iluminación, tipografía tridimensional y animaciones dinámicas de cámara.',
+    ccRole: 'Formato Corto y Ritmo Viral',
+    ccDesc: 'Ediciones verticales ágiles, efectos dinámicos y entrega optimizada para TikTok y Reels.',
+    krRole: 'Arte Digital y Cuadro a Cuadro',
+    krDesc: 'Efectos dibujados a mano cuadro a cuadro, miniaturas, máscaras y arte estilizado.',
     socialsHeading: 'REDES SOCIALES Y TIENDA',
     brandsHeading: 'MARCAS CON LAS QUE COLABORÉ',
     contactHeading: 'CONTACTO PARA PROMO',
@@ -48,6 +84,18 @@ const i18n = {
     ytSubs: 'Abonnés',
     ytViews: 'Vues',
     softwareHeading: 'LOGICIELS UTILISÉS',
+    aeRole: 'VFX, Motion & Compositing',
+    aeDesc: 'Effets visuels percutants, synchronisation velocity, shakes, tracking 3D et glows sur mesure.',
+    prRole: 'Montage & Sound Design',
+    prDesc: 'Assemblage précis sur le rythme, superposition SFX et mastérisation finale.',
+    drRole: 'Étalonnage & Finition',
+    drDesc: 'Étalonnage cinématographique, LUTs personnalisés, contraste HDR et finition studio.',
+    blRole: 'Éléments & Scènes 3D',
+    blDesc: 'Scènes 3D, éclairage, typographie 3D sur mesure et animations de caméra dynamiques.',
+    ccRole: 'Format Court & Rythme Viral',
+    ccDesc: 'Montages verticaux rapides et livraison optimisée pour TikTok, Reels et Shorts.',
+    krRole: 'Art Numérique & Image par Image',
+    krDesc: 'Effets dessinés image par image, miniatures, masques et illustrations stylisées.',
     socialsHeading: 'RÉSEAUX SOCIAUX & BOUTIQUE',
     brandsHeading: 'MARQUES PARTENAIRES',
     contactHeading: 'CONTACT PROMO',
@@ -149,6 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
   applyLanguage('en');
   loadAndRenderStats();
 
+  // Language switcher
   document.querySelectorAll('.lang-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       const lang = btn.getAttribute('data-lang');
@@ -156,6 +205,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Supabase-style expanding software accordion (hover, focus, or click)
+  const panels = document.querySelectorAll('.sw-panel');
+  panels.forEach((panel) => {
+    const activate = () => {
+      panels.forEach((p) => p.classList.remove('active'));
+      panel.classList.add('active');
+    };
+    panel.addEventListener('mouseenter', activate);
+    panel.addEventListener('focus', activate);
+    panel.addEventListener('click', activate);
+  });
+
+  // Copy email
   const copyBtn = document.getElementById('copy-email');
   const feedback = document.getElementById('copy-feedback');
   const email = 'hyoscine7@gmail.com';

@@ -98,57 +98,127 @@
 
     <div class="divider"></div>
 
-    <!-- SOFTWARES QUE USO -->
+    <!-- SOFTWARES QUE USO (ACORDEÃO EXPANSÍVEL ESTILO SUPABASE) -->
     <section class="section" aria-label="Software & Tools">
       <h2 class="section-heading" data-i18n="softwareHeading">SOFTWARE & TOOLS</h2>
 
-      <div class="software-row">
-        <!-- CapCut Pro -->
-        <div class="software-item" title="CapCut Pro" tabindex="0">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="3" y="4" width="18" height="16" rx="4" />
-            <path d="M7 8.5 17 15.5" />
-            <path d="M17 8.5 7 15.5" />
-            <path d="M7 8.5h3.5" />
-            <path d="M7 15.5h3.5" />
-          </svg>
-          <span>CapCut Pro</span>
-        </div>
-
+      <div class="software-accordion">
         <!-- After Effects -->
-        <div class="software-item" title="Adobe After Effects" tabindex="0">
-          <div class="adobe-badge">Ae</div>
-          <span>After Effects</span>
-        </div>
-
-        <!-- Blender -->
-        <div class="software-item" title="Blender 3D" tabindex="0">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="13.5" cy="14" r="6" />
-            <circle cx="13.5" cy="14" r="2.2" fill="currentColor" />
-            <path d="M13.5 8H4" />
-            <path d="M9.5 4.5 15 8" />
-            <path d="M4.5 12.5 8.5 10" />
-          </svg>
-          <span>Blender</span>
-        </div>
-
-        <!-- DaVinci Resolve -->
-        <div class="software-item" title="DaVinci Resolve" tabindex="0">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-            <circle cx="12" cy="12" r="9" />
-            <circle cx="12" cy="7.2" r="2.1" fill="currentColor" />
-            <circle cx="7.8" cy="14.5" r="2.1" fill="currentColor" />
-            <circle cx="16.2" cy="14.5" r="2.1" fill="currentColor" />
-          </svg>
-          <span>DaVinci Resolve</span>
-        </div>
+        <article class="sw-panel sw-ae active" tabindex="0">
+          <div class="sw-icon">
+            <span class="sw-badge">Ae</span>
+          </div>
+          <div class="sw-body">
+            <div class="sw-meta">
+              <h3 class="sw-title">After Effects</h3>
+              <p class="sw-role" data-i18n="aeRole">VFX, Motion & Compositing</p>
+            </div>
+            <p class="sw-desc" data-i18n="aeDesc">
+              High-impact visual effects, smooth velocity sync, shakes, 3D camera tracking, and custom glow compositing.
+            </p>
+          </div>
+        </article>
 
         <!-- Premiere Pro -->
-        <div class="software-item" title="Adobe Premiere Pro" tabindex="0">
-          <div class="adobe-badge">Pr</div>
-          <span>Premiere Pro</span>
-        </div>
+        <article class="sw-panel sw-pr" tabindex="0">
+          <div class="sw-icon">
+            <span class="sw-badge">Pr</span>
+          </div>
+          <div class="sw-body">
+            <div class="sw-meta">
+              <h3 class="sw-title">Premiere Pro</h3>
+              <p class="sw-role" data-i18n="prRole">Timeline & Sound Design</p>
+            </div>
+            <p class="sw-desc" data-i18n="prDesc">
+              Precision match-cut assembly, frame-accurate beat syncing, SFX layering, and final mastering.
+            </p>
+          </div>
+        </article>
+
+        <!-- DaVinci Resolve -->
+        <article class="sw-panel sw-davinci" tabindex="0">
+          <div class="sw-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <circle cx="12" cy="7.2" r="2.1" fill="currentColor" />
+              <circle cx="7.8" cy="14.5" r="2.1" fill="currentColor" />
+              <circle cx="16.2" cy="14.5" r="2.1" fill="currentColor" />
+            </svg>
+          </div>
+          <div class="sw-body">
+            <div class="sw-meta">
+              <h3 class="sw-title">DaVinci Resolve</h3>
+              <p class="sw-role" data-i18n="drRole">Color Grading & Finishing</p>
+            </div>
+            <p class="sw-desc" data-i18n="drDesc">
+              Cinematic color grading, custom LUTs, HDR contrast, and studio-grade visual polish.
+            </p>
+          </div>
+        </article>
+
+        <!-- Blender -->
+        <article class="sw-panel sw-blender" tabindex="0">
+          <div class="sw-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="13.5" cy="14" r="6" />
+              <circle cx="13.5" cy="14" r="2.2" fill="currentColor" />
+              <path d="M13.5 8H4" />
+              <path d="M9.5 4.5 15 8" />
+              <path d="M4.5 12.5 8.5 10" />
+            </svg>
+          </div>
+          <div class="sw-body">
+            <div class="sw-meta">
+              <h3 class="sw-title">Blender</h3>
+              <p class="sw-role" data-i18n="blRole">3D Elements & Environments</p>
+            </div>
+            <p class="sw-desc" data-i18n="blDesc">
+              3D scenes, stadium lighting, custom 3D typography, and dynamic camera animations.
+            </p>
+          </div>
+        </article>
+
+        <!-- CapCut Pro -->
+        <article class="sw-panel sw-capcut" tabindex="0">
+          <div class="sw-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="16" rx="4" />
+              <path d="M7 8.5 17 15.5" />
+              <path d="M17 8.5 7 15.5" />
+              <path d="M7 8.5h3.5" />
+              <path d="M7 15.5h3.5" />
+            </svg>
+          </div>
+          <div class="sw-body">
+            <div class="sw-meta">
+              <h3 class="sw-title">CapCut Pro</h3>
+              <p class="sw-role" data-i18n="ccRole">Short-Form & Viral Pacing</p>
+            </div>
+            <p class="sw-desc" data-i18n="ccDesc">
+              Fast-turnaround vertical edits, dynamic captions, and trend-ready delivery for TikTok & Reels.
+            </p>
+          </div>
+        </article>
+
+        <!-- Krita -->
+        <article class="sw-panel sw-krita" tabindex="0">
+          <div class="sw-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18.37 2.63a2.12 2.12 0 0 1 3 3L14 13l-4 1 1-4Z" />
+              <path d="M9 14c-2.5 0-4.5 1.5-5 4 2.5 0 6-.5 6-3" />
+              <circle cx="12" cy="12" r="9" />
+            </svg>
+          </div>
+          <div class="sw-body">
+            <div class="sw-meta">
+              <h3 class="sw-title">Krita</h3>
+              <p class="sw-role" data-i18n="krRole">Digital Art & Frame Paint</p>
+            </div>
+            <p class="sw-desc" data-i18n="krDesc">
+              Custom hand-drawn frame-by-frame effects, thumbnails, masking, and stylized artwork.
+            </p>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -161,7 +231,7 @@
       <div class="brands-row">
         <!-- Orange -->
         <a href="https://www.instagram.com/reel/DavEJIJIgaY/?utm_source=ig_web_copy_link&srtk=MzRlODBiNWFlZA=="
-          target="_blank" rel="noopener noreferrer" class="brand-item" title="Orange">
+          target="_blank" rel="noopener noreferrer" class="brand-item brand-orange" title="Orange">
           <div class="orange-logo">
             <span class="orange-square"></span>
             <span class="orange-word">orange</span>
@@ -170,7 +240,7 @@
 
         <!-- Mureka AI -->
         <a href="https://www.tiktok.com/@hy0scin3/video/7653511954715200789?is_from_webapp=1&sender_device=pc&web_id=7646073309070673415"
-          target="_blank" rel="noopener noreferrer" class="brand-item" title="Mureka AI">
+          target="_blank" rel="noopener noreferrer" class="brand-item brand-mureka" title="Mureka AI">
           <div class="mureka-logo">
             <svg class="mureka-wave" width="24" height="22" viewBox="0 0 38 36" fill="currentColor" aria-hidden="true">
               <rect x="2" y="13" width="4" height="10" rx="2" />
