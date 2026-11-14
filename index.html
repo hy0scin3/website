@@ -257,6 +257,28 @@
 
     <div class="divider"></div>
 
+    <!-- PENALTY SHOOTOUT ARENA (EM CIMA DO PROMO & INQUIRIES) -->
+    <section class="section arena-section" aria-label="Penalty Shootout Minigame">
+      <div class="arena-header">
+        <h2 class="section-heading arena-title" data-i18n="arenaHeading">PENALTY CHALLENGE</h2>
+        <div class="arena-scoreboard">
+          <span class="score-pill"><span data-i18n="arenaGoals">GOALS</span> <strong id="arena-goals">0</strong></span>
+          <span class="score-sep">•</span>
+          <span class="score-pill"><span data-i18n="arenaStreak">STREAK</span> <strong id="arena-streak">0</strong></span>
+          <span class="score-sep">•</span>
+          <span class="score-pill"><span data-i18n="arenaBest">BEST</span> <strong id="arena-best">0</strong></span>
+        </div>
+      </div>
+
+      <div class="arena-shell" id="arena-shell">
+        <canvas id="pitch-canvas" width="640" height="270"></canvas>
+      </div>
+
+      <p class="arena-hint" data-i18n="arenaHint">Click or tap inside the goal to shoot • Beat the goalkeeper</p>
+    </section>
+
+    <div class="divider"></div>
+
     <!-- CONTATO PARA PROMO -->
     <section class="section" aria-label="Promo Contact">
       <h2 class="section-heading" data-i18n="contactHeading">PROMO & INQUIRIES</h2>
@@ -278,26 +300,6 @@
             data-i18n="openMail">Open mail app ↗</a>
         </div>
       </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- MINI ARENA DE FUTEBOL INTERATIVA -->
-    <section class="section arena-section" aria-label="Mini Football Arena">
-      <div class="arena-header">
-        <h2 class="section-heading arena-title" data-i18n="arenaHeading">MINI PITCH ARENA</h2>
-        <div class="arena-scoreboard">
-          <span class="score-pill"><span data-i18n="arenaGoals">GOALS</span> <strong id="arena-goals">0</strong></span>
-          <span class="score-sep">•</span>
-          <span class="score-pill"><span data-i18n="arenaStreak">STREAK</span> <strong id="arena-streak">0</strong></span>
-        </div>
-      </div>
-
-      <div class="arena-shell" id="arena-shell">
-        <canvas id="pitch-canvas" width="640" height="250"></canvas>
-      </div>
-
-      <p class="arena-hint" data-i18n="arenaHint">Move cursor inside the pitch to strike • Click for power dash</p>
     </section>
   </main>
 

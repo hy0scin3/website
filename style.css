@@ -721,14 +721,19 @@ body {
   box-shadow: 0 0 36px rgba(0, 242, 254, 0.45), 0 18px 42px rgba(0, 0, 0, 0.65);
 }
 
+.arena-shell.save-flash {
+  --glow-color: rgba(255, 121, 0, 1);
+  box-shadow: 0 0 32px rgba(255, 121, 0, 0.42), 0 18px 42px rgba(0, 0, 0, 0.65);
+}
+
 #pitch-canvas {
   position: relative;
   z-index: 1;
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 640 / 250;
-  background: radial-gradient(circle at 50% 50%, #0e131d 0%, #090b10 100%);
+  aspect-ratio: 640 / 270;
+  background: radial-gradient(circle at 50% 42%, #0e1420 0%, #080a0e 100%);
   border-radius: 14.5px;
 }
 

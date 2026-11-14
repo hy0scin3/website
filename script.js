@@ -24,11 +24,16 @@ const i18n = {
     copyHint: 'Click email to copy',
     copied: 'Email copied!',
     openMail: 'Open mail app ↗',
-    arenaHeading: 'MINI PITCH ARENA',
+    arenaHeading: 'PENALTY CHALLENGE',
     arenaGoals: 'GOALS',
     arenaStreak: 'STREAK',
-    arenaHint: 'Move cursor inside the pitch to strike • Click for power shot',
-    goalBanner: 'GOAL!'
+    arenaBest: 'BEST',
+    arenaHint: 'Click or tap inside the goal to shoot • Beat the goalkeeper',
+    goalBanner: 'GOAL!',
+    topBinsBanner: 'TOP BINS!',
+    savedBanner: 'SAVED!',
+    postBanner: 'POST!',
+    missBanner: 'WIDE!'
   },
   pt: {
     subtitle: 'EDITS DE FUTEBOL',
@@ -55,11 +60,16 @@ const i18n = {
     copyHint: 'Clique no e-mail para copiar',
     copied: 'E-mail copiado!',
     openMail: 'Abrir aplicativo de e-mail ↗',
-    arenaHeading: 'MINI ARENA DE FUTEBOL',
+    arenaHeading: 'DESAFIO DE PÊNALTIS',
     arenaGoals: 'GOLS',
     arenaStreak: 'SEQUÊNCIA',
-    arenaHint: 'Mova o mouse no campo para conduzir e chutar • Clique para chute forte',
-    goalBanner: 'GOLAÇO!'
+    arenaBest: 'RECORDE',
+    arenaHint: 'Clique ou toque no gol para chutar • Vença o goleiro',
+    goalBanner: 'GOLAÇO!',
+    topBinsBanner: 'NA GAVETA!',
+    savedBanner: 'DEFENDEU!',
+    postBanner: 'NA TRAVE!',
+    missBanner: 'PRA FORA!'
   },
   es: {
     subtitle: 'EDITS DE FÚTBOL',
@@ -75,7 +85,7 @@ const i18n = {
     drRole: 'Color Grading y Acabado',
     drDesc: 'Etalonaje cinematográfico, LUTs personalizados, contraste HDR y acabado visual de estudio.',
     blRole: 'Elementos y Entornos 3D',
-    blDesc: 'Escenas 3D, iluminación, tipografía tridimensional y animaciones dinámicas de cámara.',
+    blDesc: 'Escenas 3D, iluminación, tipografía tridimensional y animaciones dinâmicas de cámara.',
     ccRole: 'Formato Corto y Ritmo Viral',
     ccDesc: 'Ediciones verticales ágiles, efectos dinámicos y entrega optimizada para TikTok y Reels.',
     krRole: 'Arte Digital y Cuadro a Cuadro',
@@ -86,11 +96,16 @@ const i18n = {
     copyHint: 'Haz clic en el correo para copiar',
     copied: '¡Correo copiado!',
     openMail: 'Abrir aplicación de correo ↗',
-    arenaHeading: 'MINI ARENA DE FÚTBOL',
+    arenaHeading: 'DESAFÍO DE PENALES',
     arenaGoals: 'GOLES',
     arenaStreak: 'RACHA',
-    arenaHint: 'Mueve el cursor en la cancha para patear • Clic para tiro potente',
-    goalBanner: '¡GOLAZO!'
+    arenaBest: 'RÉCORD',
+    arenaHint: 'Haz clic o toca en el arco para patear • Supera al portero',
+    goalBanner: '¡GOLAZO!',
+    topBinsBanner: '¡AL ÁNGULO!',
+    savedBanner: '¡ATAJÓ!',
+    postBanner: '¡AL PALO!',
+    missBanner: '¡AFUERA!'
   },
   fr: {
     subtitle: 'EDITS DE FOOTBALL',
@@ -117,11 +132,16 @@ const i18n = {
     copyHint: "Cliquez sur l'e-mail pour copier",
     copied: 'E-mail copié !',
     openMail: 'Ouvrir l’application mail ↗',
-    arenaHeading: 'MINI ARÈNE DE FOOT',
+    arenaHeading: 'DÉFI PENALTY',
     arenaGoals: 'BUTS',
     arenaStreak: 'SÉRIE',
-    arenaHint: 'Bougez le curseur sur le terrain • Cliquez pour un tir puissant',
-    goalBanner: 'BUUUT !'
+    arenaBest: 'RECORD',
+    arenaHint: 'Cliquez ou touchez dans le but pour tirer • Battez le gardien',
+    goalBanner: 'BUUUT !',
+    topBinsBanner: 'PLEINE LUCARNE !',
+    savedBanner: 'ARRÊTÉ !',
+    postBanner: 'POTEAU !',
+    missBanner: 'À CÔTÉ !'
   }
 };
 
@@ -208,341 +228,572 @@ function applyLanguage(lang) {
   });
 }
 
-function initPitchMinigame() {
+function initPenaltyMinigame() {
   const canvas = document.getElementById('pitch-canvas');
   const shell = document.getElementById('arena-shell');
   const goalsEl = document.getElementById('arena-goals');
   const streakEl = document.getElementById('arena-streak');
+  const bestEl = document.getElementById('arena-best');
   if (!canvas || !shell) return;
 
   const ctx = canvas.getContext('2d');
   const W = canvas.width;
   const H = canvas.height;
 
-  const goalTop = H * 0.28;
-  const goalBottom = H * 0.72;
+  // Goalpost dimensions (Perspective Front View)
+  const goal = {
+    left: 145,
+    right: 495,
+    top: 34,
+    bottom: 156,
+    depth: 18
+  };
+
+  const spot = {
+    x: W / 2,
+    y: 232
+  };
 
   let goals = 0;
   let streak = 0;
-  let bannerTimer = 0;
-  let angleTick = 0;
+  let best = 0;
+  let tick = 0;
+
+  let banner = {
+    text: '',
+    color: '#00f2fe',
+    timer: 0
+  };
 
   const pointer = {
-    x: W * 0.25,
-    y: H * 0.5,
-    vx: 0,
-    vy: 0,
+    x: W / 2,
+    y: 95,
     active: false,
-    pulse: 0
+    ripple: 0
   };
 
+  // Ball state: 'idle' | 'flying' | 'rebound'
   const ball = {
-    x: W * 0.42,
-    y: H * 0.5,
+    state: 'idle',
+    x: spot.x,
+    y: spot.y,
+    r: 13.5,
+    startX: spot.x,
+    startY: spot.y,
+    targetX: W / 2,
+    targetY: 95,
+    ctrlX: W / 2,
+    ctrlY: 140,
+    t: 0,
     vx: 0,
     vy: 0,
-    r: 10,
     spin: 0,
-    trail: []
+    trail: [],
+    netRipple: 0,
+    netHitX: W / 2,
+    netHitY: 95
   };
 
-  const keeper = {
-    x: W - 26,
-    y: H * 0.5,
-    r: 13,
-    vy: 2.1
+  // Goalkeeper state
+  const gk = {
+    state: 'idle', // 'idle' | 'diving'
+    x: W / 2,
+    y: goal.bottom - 34,
+    startX: W / 2,
+    startY: goal.bottom - 34,
+    targetX: W / 2,
+    targetY: goal.bottom - 34,
+    t: 0,
+    angle: 0,
+    targetAngle: 0
   };
 
   const particles = [];
   const borderWaves = [];
 
   function addBorderWave(side, pos, color = '#38bdf8', intensity = 1) {
-    borderWaves.push({ side, pos, radius: 12, maxRadius: 110 * intensity, alpha: 0.95, color });
+    borderWaves.push({ side, pos, radius: 14, maxRadius: 120 * intensity, alpha: 0.95, color });
   }
 
-  function spawnSparks(x, y, color, count = 14) {
+  function spawnSparks(x, y, color, count = 18) {
     for (let i = 0; i < count; i++) {
       const a = Math.random() * Math.PI * 2;
-      const sp = Math.random() * 4.2 + 1.2;
+      const sp = Math.random() * 4.8 + 1.2;
       particles.push({
         x,
         y,
         vx: Math.cos(a) * sp,
         vy: Math.sin(a) * sp,
-        size: Math.random() * 2.4 + 1,
+        size: Math.random() * 2.5 + 1,
         alpha: 1,
         color
       });
     }
   }
 
-  function resetBall(scored = false) {
-    ball.x = W * 0.38;
-    ball.y = H * 0.5 + (Math.random() - 0.5) * 40;
-    ball.vx = scored ? -1.5 : 0;
-    ball.vy = (Math.random() - 0.5) * 1.5;
+  function resetRound() {
+    ball.state = 'idle';
+    ball.x = spot.x;
+    ball.y = spot.y;
+    ball.r = 13.5;
+    ball.t = 0;
     ball.trail = [];
+
+    gk.state = 'idle';
+    gk.x = W / 2;
+    gk.y = goal.bottom - 34;
+    gk.angle = 0;
+    gk.t = 0;
   }
 
-  function updatePointerFromEvent(clientX, clientY) {
+  function shootAt(tx, ty) {
+    if (ball.state !== 'idle') return;
+
+    pointer.ripple = 1;
+    ball.state = 'flying';
+    ball.t = 0;
+    ball.startX = spot.x;
+    ball.startY = spot.y;
+    ball.targetX = tx;
+    ball.targetY = ty;
+
+    // Slight natural curve (swerve) in flight
+    const sideOffset = (tx - W / 2) * 0.22;
+    ball.ctrlX = (spot.x + tx) / 2 + sideOffset;
+    ball.ctrlY = Math.min(spot.y, ty) - 28;
+    ball.spin = sideOffset * 0.012;
+    ball.trail = [];
+
+    // Goalkeeper chooses a random dive preset (left-top, left-low, center-top, center-stay, right-top, right-low)
+    const divePresets = [
+      { x: goal.left + 42, y: goal.top + 38, angle: -0.65 },   // Top Left
+      { x: goal.left + 46, y: goal.bottom - 26, angle: -0.82 },// Bottom Left
+      { x: W / 2, y: goal.top + 36, angle: 0 },                // Center High
+      { x: W / 2, y: goal.bottom - 34, angle: 0 },             // Center Stay
+      { x: goal.right - 42, y: goal.top + 38, angle: 0.65 },   // Top Right
+      { x: goal.right - 46, y: goal.bottom - 26, angle: 0.82 } // Bottom Right
+    ];
+
+    // Pure random choice among presets (with slight variation)
+    const chosen = divePresets[Math.floor(Math.random() * divePresets.length)];
+    gk.state = 'diving';
+    gk.t = 0;
+    gk.startX = gk.x;
+    gk.startY = gk.y;
+    gk.targetX = chosen.x + (Math.random() - 0.5) * 24;
+    gk.targetY = chosen.y + (Math.random() - 0.5) * 14;
+    gk.targetAngle = chosen.angle;
+
+    spawnSparks(spot.x, spot.y, '#38bdf8', 10);
+  }
+
+  function evaluateShotOutcome() {
+    const bx = ball.targetX;
+    const by = ball.targetY;
+
+    // 1. Check if ball hit crossbar or posts
+    const nearLeftPost = Math.abs(bx - goal.left) < 10 && by >= goal.top - 8 && by <= goal.bottom;
+    const nearRightPost = Math.abs(bx - goal.right) < 10 && by >= goal.top - 8 && by <= goal.bottom;
+    const nearCrossbar = Math.abs(by - goal.top) < 9 && bx >= goal.left - 8 && bx <= goal.right + 8;
+
+    if (nearLeftPost || nearRightPost || nearCrossbar) {
+      streak = 0;
+      if (streakEl) streakEl.textContent = '0';
+      banner = { text: i18n[currentLang].postBanner, color: '#f8fafc', timer: 55 };
+      spawnSparks(bx, by, '#ffffff', 22);
+      addBorderWave('top', bx, '#ffffff', 1.5);
+      ball.state = 'rebound';
+      ball.vx = (bx < W / 2 ? -1 : 1) * 4.5;
+      ball.vy = 3.2;
+      setTimeout(resetRound, 850);
+      return;
+    }
+
+    // 2. Check if ball went wide or over the bar
+    const insideFrame = bx > goal.left && bx < goal.right && by > goal.top && by <= goal.bottom + 4;
+    if (!insideFrame) {
+      streak = 0;
+      if (streakEl) streakEl.textContent = '0';
+      banner = { text: i18n[currentLang].missBanner, color: '#94a3b8', timer: 50 };
+      if (by <= goal.top) addBorderWave('top', bx, '#94a3b8', 1.2);
+      else if (bx <= goal.left) addBorderWave('left', by, '#94a3b8', 1.2);
+      else addBorderWave('right', by, '#94a3b8', 1.2);
+      ball.state = 'rebound';
+      ball.vx = (bx - W / 2) * 0.04;
+      ball.vy = 1.5;
+      setTimeout(resetRound, 800);
+      return;
+    }
+
+    // 3. Check if Goalkeeper saved the shot!
+    // Check distance to GK center and GK outstretched hands
+    const reachX = Math.cos(gk.angle) * 34;
+    const reachY = Math.sin(gk.angle) * 34;
+    const distCenter = Math.hypot(bx - gk.x, by - gk.y);
+    const distLeftHand = Math.hypot(bx - (gk.x - reachX), by - (gk.y - reachY));
+    const distRightHand = Math.hypot(bx - (gk.x + reachX), by - (gk.y + reachY));
+    const minGkDist = Math.min(distCenter, distLeftHand, distRightHand);
+
+    if (minGkDist < 34) {
+      // SAVED BY GOALKEEPER!
+      streak = 0;
+      if (streakEl) streakEl.textContent = '0';
+      banner = { text: i18n[currentLang].savedBanner, color: '#ff7900', timer: 60 };
+      spawnSparks(bx, by, '#ff7900', 26);
+      addBorderWave('left', by, '#ff7900', 1.5);
+      addBorderWave('right', by, '#ff7900', 1.5);
+
+      shell.classList.add('save-flash');
+      setTimeout(() => shell.classList.remove('save-flash'), 600);
+
+      ball.state = 'rebound';
+      ball.vx = (bx >= gk.x ? 1 : -1) * 4.8;
+      ball.vy = 3.8;
+      setTimeout(resetRound, 900);
+      return;
+    }
+
+    // 4. GOAL SCORED!
+    goals++;
+    streak++;
+    if (streak > best) best = streak;
+    if (goalsEl) goalsEl.textContent = String(goals);
+    if (streakEl) streakEl.textContent = String(streak);
+    if (bestEl) bestEl.textContent = String(best);
+
+    // Check if it was a Top Bins (Gaveta) shot!
+    const isTopBins =
+      by < goal.top + 38 &&
+      (bx < goal.left + 58 || bx > goal.right - 58);
+
+    banner = {
+      text: isTopBins ? i18n[currentLang].topBinsBanner : i18n[currentLang].goalBanner,
+      color: isTopBins ? '#38bdf8' : '#00f2fe',
+      timer: 65
+    };
+
+    ball.netRipple = 1;
+    ball.netHitX = bx;
+    ball.netHitY = by;
+
+    spawnSparks(bx, by, '#00f2fe', 30);
+    spawnSparks(bx, by, '#ffffff', 16);
+    addBorderWave('top', bx, '#00f2fe', 2.2);
+    addBorderWave('bottom', bx, '#00f2fe', 1.8);
+    addBorderWave('left', by, '#00f2fe', 1.6);
+    addBorderWave('right', by, '#00f2fe', 1.6);
+
+    shell.classList.add('goal-flash');
+    setTimeout(() => shell.classList.remove('goal-flash'), 650);
+
+    ball.state = 'rebound';
+    ball.vx = 0;
+    ball.vy = 1.2;
+    setTimeout(resetRound, 950);
+  }
+
+  function updatePointer(clientX, clientY) {
     const rect = canvas.getBoundingClientRect();
-    const nx = ((clientX - rect.left) / rect.width) * W;
-    const ny = ((clientY - rect.top) / rect.height) * H;
-    pointer.vx = nx - pointer.x;
-    pointer.vy = ny - pointer.y;
-    pointer.x = Math.max(14, Math.min(W - 14, nx));
-    pointer.y = Math.max(14, Math.min(H - 14, ny));
+    pointer.x = Math.max(10, Math.min(W - 10, ((clientX - rect.left) / rect.width) * W));
+    pointer.y = Math.max(10, Math.min(H - 10, ((clientY - rect.top) / rect.height) * H));
     pointer.active = true;
 
-    const pctX = ((pointer.x / W) * 100).toFixed(1) + '%';
-    const pctY = ((pointer.y / H) * 100).toFixed(1) + '%';
-    shell.style.setProperty('--mx', pctX);
-    shell.style.setProperty('--my', pctY);
+    shell.style.setProperty('--mx', ((pointer.x / W) * 100).toFixed(1) + '%');
+    shell.style.setProperty('--my', ((pointer.y / H) * 100).toFixed(1) + '%');
   }
 
-  shell.addEventListener('mousemove', (e) => updatePointerFromEvent(e.clientX, e.clientY));
+  shell.addEventListener('mousemove', (e) => updatePointer(e.clientX, e.clientY));
   shell.addEventListener('mouseenter', (e) => {
     shell.classList.add('active-arena');
-    updatePointerFromEvent(e.clientX, e.clientY);
+    updatePointer(e.clientX, e.clientY);
   });
   shell.addEventListener('mouseleave', () => {
     pointer.active = false;
-    pointer.vx = 0;
-    pointer.vy = 0;
     shell.classList.remove('active-arena');
   });
 
-  // Power Strike / Dash on Click
-  function triggerPowerStrike() {
-    pointer.pulse = 1;
-    const dx = ball.x - pointer.x;
-    const dy = ball.y - pointer.y;
-    const dist = Math.hypot(dx, dy);
+  shell.addEventListener('mousedown', (e) => {
+    updatePointer(e.clientX, e.clientY);
+    shootAt(pointer.x, pointer.y);
+  });
 
-    if (dist < 85) {
-      const nx = dist > 0.1 ? dx / dist : 1;
-      const ny = dist > 0.1 ? dy / dist : 0;
-      const power = 11.5;
-      ball.vx = nx * power + pointer.vx * 0.35;
-      ball.vy = ny * power + pointer.vy * 0.35;
-      spawnSparks(ball.x, ball.y, '#00f2fe', 16);
-    }
-  }
-
-  shell.addEventListener('mousedown', () => triggerPowerStrike());
-
-  // Touch support for mobile
   shell.addEventListener(
     'touchstart',
     (e) => {
       if (e.touches[0]) {
+        e.preventDefault();
         shell.classList.add('active-arena');
-        updatePointerFromEvent(e.touches[0].clientX, e.touches[0].clientY);
-        triggerPowerStrike();
+        updatePointer(e.touches[0].clientX, e.touches[0].clientY);
+        shootAt(pointer.x, pointer.y);
       }
     },
-    { passive: true }
+    { passive: false }
   );
-
-  shell.addEventListener(
-    'touchmove',
-    (e) => {
-      if (e.touches[0]) {
-        updatePointerFromEvent(e.touches[0].clientX, e.touches[0].clientY);
-      }
-    },
-    { passive: true }
-  );
-
-  shell.addEventListener('touchend', () => {
-    pointer.active = false;
-    shell.classList.remove('active-arena');
-  });
 
   function step() {
-    angleTick += 0.045;
-    if (pointer.pulse > 0) {
-      pointer.pulse = Math.max(0, pointer.pulse - 0.06);
+    tick += 0.05;
+    if (pointer.ripple > 0) pointer.ripple = Math.max(0, pointer.ripple - 0.06);
+    if (ball.netRipple > 0) ball.netRipple = Math.max(0, ball.netRipple - 0.04);
+    if (banner.timer > 0) banner.timer--;
+
+    // Goalkeeper idle sway vs dive
+    if (gk.state === 'idle') {
+      gk.x = W / 2 + Math.sin(tick * 1.1) * 18;
+      gk.y = goal.bottom - 34 + Math.abs(Math.cos(tick * 2.2)) * 3;
+      gk.angle = Math.sin(tick * 1.1) * 0.06;
+    } else if (gk.state === 'diving') {
+      gk.t = Math.min(1, gk.t + 0.075);
+      const ease = 1 - Math.pow(1 - gk.t, 3);
+      gk.x = gk.startX + (gk.targetX - gk.startX) * ease;
+      gk.y = gk.startY + (gk.targetY - gk.startY) * ease - Math.sin(gk.t * Math.PI) * 14;
+      gk.angle = gk.targetAngle * ease;
     }
-    if (bannerTimer > 0) {
-      bannerTimer--;
-    }
 
-    // Goalkeeper AI movement inside goalposts
-    const targetY = Math.max(goalTop + keeper.r + 4, Math.min(goalBottom - keeper.r - 4, ball.y));
-    const diffY = targetY - keeper.y;
-    const maxSpeed = 2.15 + Math.min(streak * 0.18, 1.5);
-    keeper.y += Math.sign(diffY) * Math.min(Math.abs(diffY) * 0.09, maxSpeed);
+    // Ball flight animation (Quadratic Bezier with 3D perspective scale)
+    if (ball.state === 'flying') {
+      ball.t = Math.min(1, ball.t + 0.065);
+      const t = ball.t;
+      const inv = 1 - t;
 
-    // Striker Cursor <-> Ball Collision
-    if (pointer.active) {
-      const strikerR = 16;
-      const dx = ball.x - pointer.x;
-      const dy = ball.y - pointer.y;
-      const dist = Math.hypot(dx, dy);
-      const minDist = ball.r + strikerR;
+      ball.x = inv * inv * ball.startX + 2 * inv * t * ball.ctrlX + t * t * ball.targetX;
+      ball.y = inv * inv * ball.startY + 2 * inv * t * ball.ctrlY + t * t * ball.targetY;
+      ball.r = 13.5 - t * 5.2;
 
-      if (dist < minDist && dist > 0.001) {
-        const nx = dx / dist;
-        const ny = dy / dist;
-        const overlap = minDist - dist;
-        ball.x += nx * overlap;
-        ball.y += ny * overlap;
+      ball.trail.push({ x: ball.x, y: ball.y, r: ball.r });
+      if (ball.trail.length > 10) ball.trail.shift();
 
-        const cursorSpeed = Math.min(Math.hypot(pointer.vx, pointer.vy), 16);
-        const hitImpulse = Math.max(4.6, cursorSpeed * 0.72);
-        ball.vx = nx * hitImpulse + pointer.vx * 0.25;
-        ball.vy = ny * hitImpulse + pointer.vy * 0.25;
-        ball.spin = (pointer.vx - pointer.vy) * 0.05;
-        spawnSparks(ball.x - nx * ball.r, ball.y - ny * ball.r, '#38bdf8', 7);
+      if (ball.t >= 1) {
+        evaluateShotOutcome();
+      }
+    } else if (ball.state === 'rebound') {
+      ball.x += ball.vx;
+      ball.y += ball.vy;
+      ball.vy += 0.22; // gravity after impact
+      ball.vx *= 0.95;
+      if (ball.y > goal.bottom + 8) {
+        ball.y = goal.bottom + 8;
+        ball.vy *= -0.45;
       }
     }
-
-    // Goalkeeper <-> Ball Collision
-    {
-      const dx = ball.x - keeper.x;
-      const dy = ball.y - keeper.y;
-      const dist = Math.hypot(dx, dy);
-      const minDist = ball.r + keeper.r;
-
-      if (dist < minDist && dist > 0.001) {
-        const nx = dx / dist;
-        const ny = dy / dist;
-        const overlap = minDist - dist;
-        ball.x += nx * overlap;
-        ball.y += ny * overlap;
-
-        ball.vx = -Math.abs(ball.vx) * 0.85 - 3.2;
-        ball.vy += ny * 4.2;
-        spawnSparks(keeper.x - keeper.r, keeper.y, '#ff7900', 12);
-      }
-    }
-
-    // Ball Physics
-    ball.x += ball.vx;
-    ball.y += ball.vy;
-    ball.vx *= 0.985;
-    ball.vy *= 0.985;
-
-    if (Math.hypot(ball.vx, ball.vy) > 0.35) {
-      ball.trail.push({ x: ball.x, y: ball.y });
-      if (ball.trail.length > 12) ball.trail.shift();
-    } else if (ball.trail.length > 0) {
-      ball.trail.shift();
-    }
-
-    // When pointer is inactive, let border glow follow the ball
-    if (!pointer.active && Math.hypot(ball.vx, ball.vy) > 0.5) {
-      shell.classList.add('active-arena');
-      shell.style.setProperty('--mx', ((ball.x / W) * 100).toFixed(1) + '%');
-      shell.style.setProperty('--my', ((ball.y / H) * 100).toFixed(1) + '%');
-    }
-
-    // Top & Bottom Border Bounces + Border Glow Wave
-    if (ball.y - ball.r < 2) {
-      ball.y = ball.r + 2;
-      ball.vy = Math.abs(ball.vy) * 0.86;
-      addBorderWave('top', ball.x, '#38bdf8', Math.min(1.6, Math.hypot(ball.vx, ball.vy) / 5));
-      spawnSparks(ball.x, 2, '#38bdf8', 9);
-    } else if (ball.y + ball.r > H - 2) {
-      ball.y = H - ball.r - 2;
-      ball.vy = -Math.abs(ball.vy) * 0.86;
-      addBorderWave('bottom', ball.x, '#38bdf8', Math.min(1.6, Math.hypot(ball.vx, ball.vy) / 5));
-      spawnSparks(ball.x, H - 2, '#38bdf8', 9);
-    }
-
-    // Left Border Bounce
-    if (ball.x - ball.r < 2) {
-      ball.x = ball.r + 2;
-      ball.vx = Math.abs(ball.vx) * 0.86;
-      addBorderWave('left', ball.y, '#38bdf8', Math.min(1.6, Math.hypot(ball.vx, ball.vy) / 5));
-      spawnSparks(2, ball.y, '#38bdf8', 9);
-    }
-
-    // Right Border / Goal Detection
-    if (ball.x + ball.r > W - 4) {
-      if (ball.y > goalTop && ball.y < goalBottom) {
-        // GOAL SCORED!
-        goals++;
-        streak++;
-        if (goalsEl) goalsEl.textContent = String(goals);
-        if (streakEl) streakEl.textContent = String(streak);
-        bannerTimer = 68;
-
-        spawnSparks(W - 8, ball.y, '#00f2fe', 28);
-        spawnSparks(W - 14, ball.y, '#ffffff', 16);
-        addBorderWave('right', ball.y, '#00f2fe', 2.2);
-        addBorderWave('top', W * 0.85, '#00f2fe', 1.5);
-        addBorderWave('bottom', W * 0.85, '#00f2fe', 1.5);
-
-        shell.classList.add('goal-flash');
-        setTimeout(() => shell.classList.remove('goal-flash'), 650);
-
-        resetBall(true);
-      } else {
-        ball.x = W - ball.r - 4;
-        ball.vx = -Math.abs(ball.vx) * 0.86;
-        addBorderWave('right', ball.y, '#38bdf8', Math.min(1.6, Math.hypot(ball.vx, ball.vy) / 5));
-        spawnSparks(W - 2, ball.y, '#38bdf8', 9);
-      }
-    }
-
-    pointer.vx *= 0.5;
-    pointer.vy *= 0.5;
   }
 
   function draw() {
     ctx.clearRect(0, 0, W, H);
 
-    // 1. Minimalist Pitch Lines
+    // 1. Perspective Pitch Lines & Penalty Box
     ctx.save();
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.055)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
     ctx.lineWidth = 1.2;
 
-    // Halfway line & Center circle
+    // Goal line across the horizon
     ctx.beginPath();
-    ctx.moveTo(W / 2, 10);
-    ctx.lineTo(W / 2, H - 10);
+    ctx.moveTo(40, goal.bottom);
+    ctx.lineTo(W - 40, goal.bottom);
     ctx.stroke();
 
+    // Perspective 18-yard box lines
     ctx.beginPath();
-    ctx.arc(W / 2, H / 2, 36, 0, Math.PI * 2);
+    ctx.moveTo(95, goal.bottom);
+    ctx.lineTo(35, H);
+    ctx.moveTo(W - 95, goal.bottom);
+    ctx.lineTo(W - 35, H);
     ctx.stroke();
 
+    // Penalty Spot
     ctx.beginPath();
-    ctx.arc(W / 2, H / 2, 2.5, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.14)';
-    ctx.fill();
-
-    // Right Penalty Box
-    ctx.strokeRect(W - 86, H * 0.18, 86, H * 0.64);
-
-    // Left Penalty Box
-    ctx.strokeRect(0, H * 0.24, 64, H * 0.52);
-
-    // Right Goal Net Glow
-    const goalGrad = ctx.createLinearGradient(W - 18, 0, W, 0);
-    goalGrad.addColorStop(0, 'rgba(0, 242, 254, 0)');
-    goalGrad.addColorStop(1, 'rgba(0, 242, 254, 0.22)');
-    ctx.fillStyle = goalGrad;
-    ctx.fillRect(W - 18, goalTop, 18, goalBottom - goalTop);
-
-    // Goalposts
-    ctx.strokeStyle = '#00f2fe';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(W - 2, goalTop);
-    ctx.lineTo(W - 2, goalBottom);
-    ctx.stroke();
-
-    ctx.fillStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.arc(W - 3, goalTop, 3.2, 0, Math.PI * 2);
-    ctx.arc(W - 3, goalBottom, 3.2, 0, Math.PI * 2);
+    ctx.ellipse(spot.x, spot.y + 2, 5, 2.2, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.22)';
     ctx.fill();
     ctx.restore();
 
-    // 2. Border Impact Shockwaves ("fazendo efeito nas bordas")
+    // 2. 3D Goal Net & Frame
+    const backLeft = goal.left + goal.depth;
+    const backRight = goal.right - goal.depth;
+    const backTop = goal.top + goal.depth * 0.65;
+    const backBottom = goal.bottom - 4;
+
+    ctx.save();
+    // Net background glow
+    const netGrad = ctx.createLinearGradient(0, goal.top, 0, goal.bottom);
+    netGrad.addColorStop(0, 'rgba(56, 189, 248, 0.06)');
+    netGrad.addColorStop(1, 'rgba(56, 189, 248, 0.01)');
+    ctx.fillStyle = netGrad;
+    ctx.fillRect(goal.left, goal.top, goal.right - goal.left, goal.bottom - goal.top);
+
+    // Back frame of the net
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(backLeft, backTop, backRight - backLeft, backBottom - backTop);
+
+    // Net depth support lines
+    ctx.beginPath();
+    ctx.moveTo(goal.left, goal.top);
+    ctx.lineTo(backLeft, backTop);
+    ctx.moveTo(goal.right, goal.top);
+    ctx.lineTo(backRight, backTop);
+    ctx.moveTo(goal.left, goal.bottom);
+    ctx.lineTo(backLeft, backBottom);
+    ctx.moveTo(goal.right, goal.bottom);
+    ctx.lineTo(backRight, backBottom);
+    ctx.stroke();
+
+    // Net mesh grid (with ripple deformation when a goal is scored)
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+    const cols = 16;
+    const rows = 6;
+    for (let c = 1; c < cols; c++) {
+      const x = backLeft + ((backRight - backLeft) * c) / cols;
+      ctx.beginPath();
+      for (let r = 0; r <= rows; r++) {
+        const y = backTop + ((backBottom - backTop) * r) / rows;
+        const dist = Math.hypot(x - ball.netHitX, y - ball.netHitY);
+        const pull = ball.netRipple > 0 ? Math.max(0, 1 - dist / 90) * ball.netRipple * 10 : 0;
+        const nx = x + ((ball.netHitX - x) * pull) / 30;
+        const ny = y + ((ball.netHitY - y) * pull) / 30;
+        if (r === 0) ctx.moveTo(nx, ny);
+        else ctx.lineTo(nx, ny);
+      }
+      ctx.stroke();
+    }
+
+    for (let r = 1; r < rows; r++) {
+      const y = backTop + ((backBottom - backTop) * r) / rows;
+      ctx.beginPath();
+      for (let c = 0; c <= cols; c++) {
+        const x = backLeft + ((backRight - backLeft) * c) / cols;
+        const dist = Math.hypot(x - ball.netHitX, y - ball.netHitY);
+        const pull = ball.netRipple > 0 ? Math.max(0, 1 - dist / 90) * ball.netRipple * 10 : 0;
+        const nx = x + ((ball.netHitX - x) * pull) / 30;
+        const ny = y + ((ball.netHitY - y) * pull) / 30;
+        if (c === 0) ctx.moveTo(nx, ny);
+        else ctx.lineTo(nx, ny);
+      }
+      ctx.stroke();
+    }
+
+    // Subtle Top-Bins ("Gaveta") corner target hints
+    ctx.strokeStyle = 'rgba(0, 242, 254, 0.16)';
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath();
+    ctx.arc(goal.left + 28, goal.top + 24, 15, 0, Math.PI * 2);
+    ctx.moveTo(goal.right - 13, goal.top + 24);
+    ctx.arc(goal.right - 28, goal.top + 24, 15, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Main Front Goalposts & Crossbar
+    ctx.strokeStyle = '#e2e8f0';
+    ctx.lineWidth = 4.5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.shadowBlur = 12;
+    ctx.shadowColor = 'rgba(56, 189, 248, 0.35)';
+    ctx.beginPath();
+    ctx.moveTo(goal.left, goal.bottom);
+    ctx.lineTo(goal.left, goal.top);
+    ctx.lineTo(goal.right, goal.top);
+    ctx.lineTo(goal.right, goal.bottom);
+    ctx.stroke();
+    ctx.restore();
+
+    // 3. Goalkeeper (Articulated diving silhouette with glowing gloves)
+    ctx.save();
+    ctx.translate(gk.x, gk.y);
+    ctx.rotate(gk.angle);
+    ctx.shadowBlur = 14;
+    ctx.shadowColor = 'rgba(255, 121, 0, 0.5)';
+
+    // Arms & Gloves
+    ctx.strokeStyle = '#ff7900';
+    ctx.lineWidth = 3.5;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(-28, -6);
+    ctx.lineTo(0, -2);
+    ctx.lineTo(28, -6);
+    ctx.stroke();
+
+    // Gloves
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(-30, -7, 4.8, 0, Math.PI * 2);
+    ctx.arc(30, -7, 4.8, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Torso
+    ctx.fillStyle = '#18181b';
+    ctx.strokeStyle = '#ff7900';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(-11, -6, 22, 26, 6);
+    ctx.fill();
+    ctx.stroke();
+
+    // Head
+    ctx.beginPath();
+    ctx.arc(0, -14, 7.5, 0, Math.PI * 2);
+    ctx.fillStyle = '#f8fafc';
+    ctx.fill();
+    ctx.restore();
+
+    // 4. Aiming Trajectory Line (when idle and cursor is inside arena)
+    if (pointer.active && ball.state === 'idle') {
+      ctx.save();
+      const sideCurve = (pointer.x - W / 2) * 0.22;
+      const cx = (spot.x + pointer.x) / 2 + sideCurve;
+      const cy = Math.min(spot.y, pointer.y) - 28;
+
+      ctx.beginPath();
+      ctx.moveTo(spot.x, spot.y);
+      ctx.quadraticCurveTo(cx, cy, pointer.x, pointer.y);
+      ctx.setLineDash([4, 5]);
+      ctx.strokeStyle = 'rgba(0, 242, 254, 0.32)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
+    }
+
+    // 5. Ball Trail
+    for (let i = 0; i < ball.trail.length; i++) {
+      const tr = ball.trail[i];
+      const ratio = (i + 1) / ball.trail.length;
+      ctx.beginPath();
+      ctx.arc(tr.x, tr.y, tr.r * ratio * 0.75, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0, 242, 254, ${ratio * 0.26})`;
+      ctx.fill();
+    }
+
+    // 6. Football
+    ctx.save();
+    ctx.translate(ball.x, ball.y);
+    ctx.rotate(tick * (ball.state === 'flying' ? 3.5 : 0.4));
+    ctx.shadowBlur = 16;
+    ctx.shadowColor = 'rgba(255, 255, 255, 0.5)';
+
+    ctx.beginPath();
+    ctx.arc(0, 0, ball.r, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+
+    // Pentagon pattern scaled to ball.r
+    ctx.fillStyle = '#090d16';
+    ctx.beginPath();
+    ctx.arc(0, 0, ball.r * 0.28, 0, Math.PI * 2);
+    ctx.fill();
+
+    for (let k = 0; k < 5; k++) {
+      const a = (k * Math.PI * 2) / 5;
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(a) * ball.r * 0.25, Math.sin(a) * ball.r * 0.25);
+      ctx.lineTo(Math.cos(a) * ball.r * 0.85, Math.sin(a) * ball.r * 0.85);
+      ctx.strokeStyle = '#090d16';
+      ctx.lineWidth = 1.1;
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // 7. Border Shockwaves ("fazendo efeito nas bordas")
     for (let i = borderWaves.length - 1; i >= 0; i--) {
       const w = borderWaves[i];
       w.radius += (w.maxRadius - w.radius) * 0.16;
@@ -578,7 +829,7 @@ function initPitchMinigame() {
       ctx.restore();
     }
 
-    // 3. Cursor Proximity Glow on Nearest Borders
+    // 8. Cursor Proximity Glow on Nearest Borders
     if (pointer.active) {
       const edges = [
         { side: 'top', dist: pointer.y, pos: pointer.x },
@@ -616,64 +867,7 @@ function initPitchMinigame() {
       });
     }
 
-    // 4. Ball Motion Trail
-    for (let i = 0; i < ball.trail.length; i++) {
-      const t = ball.trail[i];
-      const ratio = (i + 1) / ball.trail.length;
-      ctx.beginPath();
-      ctx.arc(t.x, t.y, ball.r * ratio * 0.75, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(56, 189, 248, ${ratio * 0.22})`;
-      ctx.fill();
-    }
-
-    // 5. Goalkeeper
-    ctx.save();
-    ctx.shadowBlur = 14;
-    ctx.shadowColor = 'rgba(255, 121, 0, 0.55)';
-    ctx.beginPath();
-    ctx.arc(keeper.x, keeper.y, keeper.r, 0, Math.PI * 2);
-    ctx.fillStyle = '#141824';
-    ctx.fill();
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = '#ff7900';
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.arc(keeper.x, keeper.y, 4, 0, Math.PI * 2);
-    ctx.fillStyle = '#ff7900';
-    ctx.fill();
-    ctx.restore();
-
-    // 6. Football
-    ctx.save();
-    ctx.translate(ball.x, ball.y);
-    ctx.rotate(angleTick * (Math.hypot(ball.vx, ball.vy) * 0.4 + 0.2));
-    ctx.shadowBlur = 14;
-    ctx.shadowColor = 'rgba(255, 255, 255, 0.45)';
-
-    ctx.beginPath();
-    ctx.arc(0, 0, ball.r, 0, Math.PI * 2);
-    ctx.fillStyle = '#f8fafc';
-    ctx.fill();
-
-    // Minimalist pentagon seam details
-    ctx.fillStyle = '#0f172a';
-    ctx.beginPath();
-    ctx.arc(0, 0, 3.3, 0, Math.PI * 2);
-    ctx.fill();
-
-    for (let k = 0; k < 5; k++) {
-      const a = (k * Math.PI * 2) / 5;
-      ctx.beginPath();
-      ctx.moveTo(Math.cos(a) * 3, Math.sin(a) * 3);
-      ctx.lineTo(Math.cos(a) * ball.r * 0.85, Math.sin(a) * ball.r * 0.85);
-      ctx.strokeStyle = '#0f172a';
-      ctx.lineWidth = 1.2;
-      ctx.stroke();
-    }
-    ctx.restore();
-
-    // 7. Particles
+    // 9. Particles
     for (let i = particles.length - 1; i >= 0; i--) {
       const p = particles[i];
       p.x += p.vx;
@@ -694,59 +888,61 @@ function initPitchMinigame() {
       ctx.restore();
     }
 
-    // 8. Custom Environment Striker Cursor ("indicador do mouse mudando no ambiente")
+    // 10. Custom Environment Aiming Reticle ("indicador do mouse mudando no ambiente")
     if (pointer.active) {
+      const inGoal =
+        pointer.x > goal.left &&
+        pointer.x < goal.right &&
+        pointer.y > goal.top &&
+        pointer.y <= goal.bottom;
+
+      const reticleColor = inGoal ? '#00f2fe' : '#94a3b8';
+
       ctx.save();
       ctx.translate(pointer.x, pointer.y);
 
-      // Power pulse ring on click
-      if (pointer.pulse > 0) {
+      if (pointer.ripple > 0) {
         ctx.beginPath();
-        ctx.arc(0, 0, 16 + (1 - pointer.pulse) * 42, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(0, 242, 254, ${pointer.pulse * 0.85})`;
+        ctx.arc(0, 0, 12 + (1 - pointer.ripple) * 34, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(0, 242, 254, ${pointer.ripple})`;
         ctx.lineWidth = 2;
         ctx.stroke();
       }
 
-      // Rotating outer tactical segments
       ctx.save();
-      ctx.rotate(angleTick);
-      ctx.strokeStyle = '#00f2fe';
-      ctx.lineWidth = 1.8;
-      ctx.shadowBlur = 12;
-      ctx.shadowColor = '#00f2fe';
+      ctx.rotate(tick * 0.8);
+      ctx.strokeStyle = reticleColor;
+      ctx.lineWidth = 1.6;
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = reticleColor;
 
-      for (let s = 0; s < 3; s++) {
-        const startA = (s * Math.PI * 2) / 3;
+      for (let s = 0; s < 4; s++) {
+        const a = (s * Math.PI) / 2;
         ctx.beginPath();
-        ctx.arc(0, 0, 15, startA, startA + 1.15);
+        ctx.arc(0, 0, 12, a + 0.2, a + 1.15);
         ctx.stroke();
       }
       ctx.restore();
 
-      // Inner glowing striker point
       ctx.beginPath();
-      ctx.arc(0, 0, 4.2, 0, Math.PI * 2);
+      ctx.arc(0, 0, 3, 0, Math.PI * 2);
       ctx.fillStyle = '#ffffff';
-      ctx.shadowBlur = 10;
-      ctx.shadowColor = '#ffffff';
       ctx.fill();
-
       ctx.restore();
     }
 
-    // 9. GOAL! Celebration Overlay
-    if (bannerTimer > 0) {
+    // 11. Outcome Banner (GOAL! / TOP BINS! / SAVED! / POST!)
+    if (banner.timer > 0) {
       ctx.save();
-      const alpha = Math.min(1, bannerTimer / 18);
+      const alpha = Math.min(1, banner.timer / 16);
       ctx.globalAlpha = alpha;
-      ctx.font = '800 28px Inter, sans-serif';
+      ctx.font = '800 24px Inter, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillStyle = '#ffffff';
-      ctx.shadowBlur = 22;
-      ctx.shadowColor = '#00f2fe';
-      ctx.fillText(i18n[currentLang].goalBanner || 'GOAL!', W / 2, H / 2);
+      ctx.shadowBlur = 20;
+      ctx.shadowColor = banner.color;
+      ctx.fillText(banner.text, W / 2, H * 0.74);
       ctx.restore();
     }
   }
@@ -768,7 +964,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   applyLanguage('en');
   loadAndRenderStats();
-  initPitchMinigame();
+  initPenaltyMinigame();
 
   // Language switcher
   document.querySelectorAll('.lang-btn').forEach((btn) => {
