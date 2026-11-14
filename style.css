@@ -157,20 +157,13 @@ body {
   margin: 36px 0;
 }
 
-/* CONTADOR DE MÉTRICAS (EM CIMA - 2 COLUNAS EMPILHADAS) */
-.stats-columns {
+/* CONTADOR DE MÉTRICAS (EM CIMA) */
+.stats-row {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 64px;
-}
-
-.stat-col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
+  gap: 38px;
 }
 
 .stat-item {
@@ -213,12 +206,12 @@ body {
   opacity: 0.85;
 }
 
-.stats-columns:hover .stat-item {
+.stats-row:hover .stat-item {
   opacity: 0.35;
 }
 
-.stats-columns .stat-item:hover,
-.stats-columns .stat-item:focus-visible {
+.stats-row .stat-item:hover,
+.stats-row .stat-item:focus-visible {
   opacity: 1;
   color: var(--text-bright);
   transform: translateY(-2px) scale(1.05);
