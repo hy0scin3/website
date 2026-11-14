@@ -956,13 +956,29 @@ function initPenaltyMinigame() {
   loop();
 }
 
+function detectUserLanguage() {
+  const supported = ['en', 'pt', 'es', 'fr'];
+  const browserLangs = Array.isArray(navigator.languages) && navigator.languages.length
+    ? navigator.languages
+    : [navigator.language || navigator.userLanguage || 'en'];
+
+  for (const raw of browserLangs) {
+    if (!raw) continue;
+    const base = String(raw).toLowerCase().split(/[-_]/)[0];
+    if (supported.includes(base)) {
+      return base;
+    }
+  }
+  return 'en';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const yearEl = document.getElementById('year');
   if (yearEl) {
     yearEl.textContent = new Date().getFullYear();
   }
 
-  applyLanguage('en');
+  applyLanguage(detectUserLanguage());
   loadAndRenderStats();
   initPenaltyMinigame();
 
