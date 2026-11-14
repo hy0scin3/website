@@ -63,7 +63,7 @@ function formatCompact(num) {
     return (num / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M+';
   }
   if (num >= 1_000) {
-    return Math.round(num / 1_000) + 'K+';
+    return (num / 1_000).toFixed(1).replace(/\.0$/, '') + 'K+';
   }
   return String(num);
 }
@@ -96,8 +96,8 @@ async function loadAndRenderStats() {
   };
 
   let data = {
-    tiktokFollowers: 330000,
-    tiktokLikes: 1400000,
+    tiktokFollowers: 332800,
+    tiktokLikes: 27200000,
     youtubeSubscribers: 463000,
     youtubeViews: 164264010
   };
