@@ -359,16 +359,16 @@ body {
 
 .sw-body {
   position: absolute;
+  top: 54px;
   left: 22px;
   right: 22px;
-  bottom: 18px;
   opacity: 0;
   transform: translateY(8px);
   pointer-events: none;
   transition: opacity 0.22s ease, transform 0.28s ease;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .sw-panel.active .sw-body {
@@ -666,6 +666,10 @@ body {
   color: var(--text-dim);
 }
 
+.score-pill {
+  white-space: nowrap;
+}
+
 .score-pill strong {
   color: var(--text-bright);
   font-weight: 700;
@@ -690,7 +694,7 @@ body {
   cursor: none;
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.65);
   transition: box-shadow 0.35s ease, transform 0.35s ease;
-  touch-action: none;
+  touch-action: manipulation;
 }
 
 /* Efeito luminoso dinâmico nas bordas que acompanha o mouse e a bola */
@@ -762,35 +766,94 @@ body {
 
 @media (max-width: 560px) {
   body {
-    padding: 48px 16px 28px;
+    padding: 40px 16px 28px;
   }
 
   .lang-bar {
     position: static;
-    margin-bottom: 24px;
+    margin-bottom: 22px;
   }
 
+  /* Grade 2x2 simétrica para os 4 números no celular */
   .stats-row {
-    gap: 24px 32px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px 20px;
+    width: 100%;
+    max-width: 310px;
+    margin: 0 auto;
   }
 
+  /* Acordeão de softwares ajustado para telas estreitas sem sobrepor o ícone */
   .software-accordion {
-    height: 215px;
-    gap: 6px;
+    height: 220px;
+    gap: 5px;
   }
 
   .sw-panel {
-    min-width: 34px;
+    flex: 0 0 30px;
+    min-width: 30px;
+    padding: 14px 0;
+    border-radius: 10px;
   }
 
   .sw-panel.active {
-    padding: 16px;
+    flex: 1 1 auto;
+    padding: 14px;
+  }
+
+  .sw-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .sw-badge {
+    width: 20px;
+    height: 20px;
+    font-size: 0.6rem;
+    border-radius: 4px;
   }
 
   .sw-body {
-    left: 16px;
-    right: 16px;
-    bottom: 16px;
+    top: 46px;
+    left: 14px;
+    right: 14px;
+    gap: 8px;
+  }
+
+  .sw-title {
+    font-size: 0.82rem;
+  }
+
+  .sw-role {
+    font-size: 0.63rem;
+    line-height: 1.25;
+  }
+
+  .sw-desc {
+    font-size: 0.71rem;
+    line-height: 1.38;
+  }
+
+  /* Cabeçalho do Penalty Challenge centralizado em 2 linhas limpas */
+  .arena-header {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+
+  .arena-scoreboard {
+    gap: 8px;
+    font-size: 0.62rem;
+  }
+
+  .arena-hint {
+    font-size: 0.62rem;
+    line-height: 1.4;
+    padding: 0 8px;
   }
 
   .socials-row {
@@ -798,6 +861,6 @@ body {
   }
 
   .brands-row {
-    gap: 36px;
+    gap: 32px;
   }
 }
