@@ -863,8 +863,10 @@ body {
   .brands-row {
     gap: 32px;
   }
+}
 
-  /* No celular, exibe as marcas colaboradoras já com as cores oficiais */
+/* Em celulares e telas touch, exibe as marcas colaboradoras já com as cores oficiais */
+@media (max-width: 768px), (hover: none) {
   .brand-orange {
     color: #ff7900;
     filter: drop-shadow(0 0 12px rgba(255, 121, 0, 0.35));
